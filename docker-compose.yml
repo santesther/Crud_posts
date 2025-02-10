@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:alpine
+    container_name: postgres-db
+    restart: always
+    ports:
+      - "5432:5432"  # Porta do PostgreSQL (host:container)
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1q2w3e4r
+      POSTGRES_DB: crud_api_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  backend:
+    build:
+      context: .  # Diretório onde está o Dockerfile do backend
+      dockerfile: Dockerfile
+    container_name: rails-backend
+    restart: always
+    environment:
+      DATABASE_URL: "postgresql://postgres:1q2w3e4r@database:5432/crud_api_db"  # Conexão com o banco de dados
+      RAILS_ENV: development
+    ports:
+      - "3000:3000"  # Porta do servidor Rails
+    depends_on:
+      - database  # Garante que o banco esteja rodando antes
+    volumes:
+      - .:/app  # Monta o código-fonte do backend
+      - /app/node_modules  # Persiste dependências do Rails
+    networks:
+      - app_network
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+
+  frontend:
+    build:
+      context: ./client  # Diretório onde está o Dockerfile do frontend
+      dockerfile: Dockerfile
+    container_name: rails-frontend
+    restart: always
+    environment:
+      NODE_ENV: development
+    ports:
+      - "5173:5173"  # Porta do Vite
+    depends_on:
+      - backend  # Garante que o backend esteja rodando primeiro
+    volumes:
+      - ./client:/app  # Monta o código do frontend
+      - /app/node_modules  # Impede que sobrescreva os pacotes do container
+    networks:
+      - app_network
+    command: npm run dev -- --host # Inicia o servidor de desenvolvimento do Vite
+
+networks:
+  app_network:
+    driver: bridge  # Rede que conecta os serviços
+
+volumes:
+  pgdata:
+    driver: local  # Volume persistente para dados do PostgreSQL

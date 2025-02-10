@@ -21,23 +21,4 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_29_211910) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "providers", force: :cascade do |t|
-    t.string "name"
-    t.string "image_url"
-    t.string "slug"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "reviews", force: :cascade do |t|
-    t.string "title"
-    t.string "description"
-    t.integer "score"
-    t.bigint "provider_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["provider_id"], name: "index_reviews_on_provider_id"
-  end
-
-  add_foreign_key "reviews", "providers"
 end
