@@ -9,8 +9,8 @@ services:
       - "5432:5432"  # Porta do PostgreSQL (host:container)
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1q2w3e4r
-      POSTGRES_DB: crud_api_db
+      POSTGRES_PASSWORD: Aula*infra
+      POSTGRES_DB: aws-db
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -23,7 +23,7 @@ services:
     container_name: rails-backend
     restart: always
     environment:
-      DATABASE_URL: "postgresql://postgres:1q2w3e4r@database:5432/crud_api_db"  # Conexão com o banco de dados
+      DATABASE_URL: "postgres://postgres:Aula*infra@aws-db.c7aowykqakut.us-east-1.rds.amazonaws.com:5432/aws-db"
       RAILS_ENV: development
     ports:
       - "3000:3000"  # Porta do servidor Rails
