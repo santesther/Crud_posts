@@ -29,7 +29,3 @@
 !/storage/.keep
 /tmp/storage/*
 !/tmp/storage/.keep
-log/*
-tmp/*
-node_modules
-.git
