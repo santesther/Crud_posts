@@ -1,8 +1,15 @@
-# Use uma imagem base com Ruby
-FROM ruby:3.0.2
+# Use uma imagem base leve com Ruby
+FROM ruby:3.0.2-slim
 
-# Instale dependências
-RUN apt-get update -qq && apt-get install -y postgresql-client nodejs npm
+# Instale dependências básicas
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    nodejs \
+    npm \
+    --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Instale o bundler
 RUN gem install bundler
@@ -10,17 +17,18 @@ RUN gem install bundler
 # Defina o diretório de trabalho
 WORKDIR /app
 
-# Copie o Gemfile e o Gemfile.lock para o container
+# Copie apenas os arquivos necessários pro bundle
 COPY Gemfile Gemfile.lock ./
 
-# Instale as dependências
+# Instale as gems somente de produção (ou customize)
+ENV BUNDLE_WITHOUT="development test"
 RUN bundle install
 
-# Copie todo o código do backend para o container
+# Agora copie o resto da aplicação
 COPY . .
 
-# Exponha a porta que o servidor Rails usará
+# Exponha a porta
 EXPOSE 3000
 
-# Inicie o servidor Rails
+# Comando padrão
 CMD ["rails", "server", "-b", "0.0.0.0"]

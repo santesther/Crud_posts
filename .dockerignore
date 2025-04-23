@@ -20,6 +20,14 @@
 !/log/.keep
 !/tmp/.keep
 
+log/*
+tmp/*
+node_modules/
+storage/*
+public/assets/*
+vendor/cache/*
+coverage/
+
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*
 !/tmp/pids/.keep
