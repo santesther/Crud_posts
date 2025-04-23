@@ -23,9 +23,25 @@
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*
 !/tmp/pids/.keep
+/spec
+/test
+
 
 # Ignore storage (uploaded files in development and any SQLite databases).
 /storage/*
 !/storage/.keep
 /tmp/storage/*
 !/tmp/storage/.keep
+log/*
+tmp/*
+node_modules
+.git
+.byebug_history
+.rspec
+coverage/
+vendor/
+/.vscode
+/.idea
+/.github
+
+
